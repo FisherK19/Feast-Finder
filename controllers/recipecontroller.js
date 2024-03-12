@@ -1,4 +1,3 @@
-// controllers/recipeController.js
 const Recipe = require('../models/recipe');
 
 exports.getRecipes = async (req, res) => {
@@ -22,5 +21,37 @@ exports.getRecipeById = async (req, res) => {
   }
 };
 
-// Implement other controller functions for create, update, and delete operations
+exports.createRecipe = async (req, res) => {
+  try {
+    const { name, ingredients } = req.body;
+    const recipe = await Recipe.create({ name, ingredients });
+    res.status(201).json(recipe);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
+exports.updateRecipe = async (req, res) => {
+  try {
+    const { name, ingredients } = req.body;
+    const updatedRecipe = await Recipe.findByIdAndUpdate(req.params.id, { name, ingredients }, { new: true });
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    res.status(200).json(updatedRecipe);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteRecipe = async (req, res) => {
+  try {
+    const deletedRecipe = await Recipe.findByIdAndDelete(req.params.id);
+    if (!deletedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    res.status(200).json({ message: 'Recipe deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
