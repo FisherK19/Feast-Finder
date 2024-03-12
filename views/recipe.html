@@ -4,28 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Finder</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Include your CSS file -->
+    <link rel="stylesheet" href="../public/css/recipe.css">
 </head>
 <body>
     <header>
         <h1>Recipe Finder</h1>
-        <!-- Navigation links or buttons can be added here -->
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
     <main>
-        <div class="recipe-container">
-            <!-- Display each recipe here dynamically using Handlebars or JavaScript -->
-            <div class="recipe">
-                <h2>Recipe Name</h2>
-                <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Ingredients: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <!-- Additional details about the recipe can be displayed here -->
-            </div>
-            <!-- Add more recipe elements as needed -->
-        </div>
+        <section class="search-bar">
+            <input type="text" placeholder="Search recipes...">
+            <button>Search</button>
+        </section>
+        <section class="recipe-container">
+            <article class="recipe-card">
+                <img src="recipe-image.jpg" alt="Recipe Image">
+                <div class="recipe-info">
+                    <h2>Recipe Name</h2>
+                    <p>Description: A brief description of the recipe.</p>
+                    <p>Ingredients: List of ingredients...</p>
+                    <p>Instructions: Step-by-step instructions...</p>
+                </div>
+            </article>
+            <!-- Add more recipe cards as needed -->
+        </section>
     </main>
     <footer>
-        <!-- Footer content, such as attribution or contact information -->
+        <p>&copy; 2024 Recipe Finder. All rights reserved.</p>
     </footer>
-    <script src="script.js"></script> <!-- Include your JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
