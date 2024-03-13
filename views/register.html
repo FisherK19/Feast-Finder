@@ -4,24 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup - Recipe Finder</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Adjust the path based on your project structure -->
+    <link rel="stylesheet" href="/public/css/register.css"> <!-- Adjust the path based on your project structure -->
 </head>
 <body>
+    <img src="/public/images/FeastFinder.png" style="height: 150px; align-items: center;"  alt="feast Finder Logo">
+    <br>
     <div class="container">
         <h1>Signup</h1>
         <form action="/signup" method="POST">
+            <br>
+            <p style="font-size: x-small;">
+                Type yu're name here. 
+            </p>
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
             </div>
+            <br>
+            <p style="font-size:x-small;">
+                Type you're email here. 
+            </p>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
+            <br>
+            <p style="font-size: x-small;">
+                Type you're password here. Please
+                <br> make sure it is not you're name or
+                <br>other identifying features.
+            </p>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            <br>
+            <p style="font-size: x-small;">
+                Click here to sign up.
+            </p>
             <button type="submit">Sign up</button>
         </form>
         <p>Already have an account? <a href="/login">Login</a></p>
