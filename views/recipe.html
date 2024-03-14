@@ -4,49 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{recipe.title}}</title>
-    <!-- Link to CSS files -->
-    <link rel="stylesheet" href="/public/css/style.css">
-    <!-- Add any other CSS files here -->
+
+    <title>Recipe Finder</title>
+    <link rel="stylesheet" href="../public/css/recipe.css">
+
 </head>
 
 <body>
     <header>
+
+        <h1>Recipe Finder</h1>
         <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
+            <li><a href="/">Home</a></li>
                 <li><a href="/recipes">Recipes</a></li>
                 <li><a href="/register">Register</a></li>
                 <li><a href="/login">Login</a></li>
-                <!-- Add more navigation links as needed -->
-            </ul>
         </nav>
-        <h1>{{recipe.title}}</h1>
+
     </header>
 
     <main>
-        <div class="recipe-details">
-            <h2>Ingredients:</h2>
-            <ul>
-                {{#each recipe.ingredients}}
-                <li>{{this}}</li>
-                {{/each}}
-            </ul>
-            <h2>Instructions:</h2>
-            <ol>
-                {{#each recipe.instructions}}
-                <li>{{this}}</li>
-                {{/each}}
-            </ol>
-        </div>
+
+        <section class="search-bar">
+            <input type="text" placeholder="Search recipes...">
+            <button>Search</button>
+        </section>
+        <section class="recipe-container">
+            <article class="recipe-card">
+                <img src="recipe-image.jpg" alt="Recipe Image">
+                <div class="recipe-info">
+                    <h2>Recipe Name</h2>
+                    <p>Description: A brief description of the recipe.</p>
+                    <p>Ingredients: List of ingredients...</p>
+                    <p>Instructions: Step-by-step instructions...</p>
+                </div>
+            </article>
+            <!-- Add more recipe cards as needed -->
+        </section>
+
     </main>
 
     <footer>
-        <p>&copy; 2024 Feast Finder</p>
-        <!-- Add any additional footer content here -->
-    </footer>
 
-    <!-- Add any additional script files or links here -->
+        <p>&copy; 2024 Recipe Finder. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+
 </body>
 
 </html>

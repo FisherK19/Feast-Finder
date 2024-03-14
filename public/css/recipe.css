@@ -1,0 +1,110 @@
+/* Change all text color to orange and center all text */
+body, h1, h2, p, a, input, button {
+    color: orange;
+    text-align: center;
+}
+
+/* Center the search bar */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* Adjust the input and button inside the search bar */
+.search-bar input, .search-bar button {
+    margin: 0 5px;
+}
+
+body {
+    background-color: #0E2B2F;
+}
+
+/* General styling for the recipe container */
+.recipe-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 30px;
+    background-color: #0E2B2F;
+}
+
+/* Styling for each recipe card */
+.recipe-card {
+    background-color: #1A3C3F; /* Slightly lighter shade of the background color */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hover effect for recipe cards */
+.recipe-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the recipe image */
+.recipe-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.recipe-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Gradient overlay on the image */
+.recipe-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+    z-index: 1;
+}
+
+/* Styling for the recipe information */
+.recipe-info {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.recipe-info h2 {
+    margin-top: 0;
+    color: #fff; /* Changed to white for better contrast */
+    font-size: 22px;
+}
+
+.recipe-info p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #ccc; /* Lighter color for better contrast */
+}
+
+/* Button styling */
+.button {
+    align-self: center;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
