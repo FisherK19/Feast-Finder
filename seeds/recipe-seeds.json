@@ -1,0 +1,64 @@
+[
+  {
+    "recipe_name": "Spaghetti Carbonara",
+    "ingredients": "Spaghetti, bacon, eggs, Parmesan cheese, black pepper",
+    "directions": [
+      "Cook spaghetti according to package instructions.",
+      "In a skillet, cook bacon until crispy, then set aside.",
+      "In a bowl, whisk eggs, Parmesan cheese, and black pepper.",
+      "Drain spaghetti and immediately toss with egg mixture until well-coated.",
+      "Crumble bacon on top and serve hot."
+    ]
+  },
+  {
+    "recipe_name": "Chicken Alfredo Pasta",
+    "ingredients": "Fettuccine pasta, chicken breast, heavy cream, garlic, Parmesan cheese, butter",
+    "directions": [
+      "Cook fettuccine pasta according to package instructions.",
+      "In a skillet, cook diced chicken breast until no longer pink.",
+      "Add minced garlic and cook until fragrant.",
+      "Pour in heavy cream and simmer until slightly thickened.",
+      "Stir in grated Parmesan cheese and cooked pasta until well-combined.",
+      "Serve hot with a sprinkle of parsley."
+    ]
+  },
+  {
+    "recipe_name": "Vegetable Stir-Fry",
+    "ingredients": "Assorted vegetables (bell peppers, broccoli, carrots, snap peas), tofu (optional), soy sauce, ginger, garlic, sesame oil",
+    "directions": [
+      "Heat sesame oil in a wok or skillet over high heat.",
+      "Add diced tofu (if using) and stir-fry until golden brown.",
+      "Add sliced vegetables, minced ginger, and garlic, and stir-fry until tender-crisp.",
+      "Drizzle soy sauce over the vegetables and toss to combine.",
+      "Serve hot as a side dish or over cooked rice."
+    ]
+  },
+  {
+    "recipe_name": "Homemade Pizza",
+    "ingredients": "Pizza dough, marinara sauce, mozzarella cheese, pepperoni slices, bell peppers, mushrooms, onions",
+    "directions": [
+      "Preheat oven to 425°F (220°C).",
+      "Roll out pizza dough on a floured surface and transfer to a greased baking sheet.",
+      "Spread marinara sauce evenly over the dough.",
+      "Sprinkle shredded mozzarella cheese over the sauce.",
+      "Add desired toppings such as pepperoni, sliced bell peppers, mushrooms, and onions.",
+      "Bake in the preheated oven for 15-20 minutes, or until the crust is golden brown and the cheese is bubbly.",
+      "Slice and serve hot."
+    ]
+  },
+  {
+    "recipe_name": "Chocolate Chip Cookies",
+    "ingredients": "All-purpose flour, butter, brown sugar, granulated sugar, eggs, vanilla extract, baking soda, salt, chocolate chips",
+    "directions": [
+      "Preheat oven to 375°F (190°C).",
+      "In a mixing bowl, cream together butter, brown sugar, and granulated sugar until smooth.",
+      "Beat in eggs, one at a time, then stir in vanilla extract.",
+      "In a separate bowl, combine flour, baking soda, and salt. Gradually add the dry ingredients to the wet ingredients and mix until well-combined.",
+      "Fold in chocolate chips.",
+      "Drop dough by rounded spoonfuls onto ungreased baking sheets.",
+      "Bake in preheated oven for 8 to 10 minutes, or until edges are lightly golden.",
+      "Allow cookies to cool on baking sheets for a few minutes before transferring to wire racks to cool completely."
+    ]
+  }
+]
+ 
