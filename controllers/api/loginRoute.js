@@ -1,6 +1,5 @@
 // Import necessary modules and dependencies
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../../models/user');
 
@@ -25,11 +24,11 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Incorrect password' });
         }
 
-        // Generate JWT token
-        const token = jwt.sign({ userId: user.id }, 'your_secret_key', { expiresIn: '1h' });
+        // Store user ID in the session
+        req.session.userId = user.id;
 
-        // Send token back to client
-        res.status(200).json({ token });
+        // Send success response
+        res.status(200).json({ message: 'Login successful' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
