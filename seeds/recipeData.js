@@ -1,5 +1,5 @@
 const sequelize = require('../config/connection');
-const Recipe = require('../models/Recipe'); // Import the Recipe model
+const Recipe = require('../models/recipe'); // Import the Recipe model
 const recipeData = require('./recipe-seeds.json'); // Import the recipe data from JSON file
 
 // Function to seed the database with recipe data

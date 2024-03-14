@@ -43,7 +43,7 @@
       "dish_name": "Cape Malay Curry",
       "description": "Chicken and vegitable curry dish with basmati rice",
       "guest_name": "Samuel",
-      "has_nuts": false
+      "has_nuts": true
     }
   ]
   

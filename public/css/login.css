@@ -1,0 +1,22 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    background-color: #0e2b2f;
+    color: coral;
+    font-size: 14px;
+    text-align: center;
+}
+
+header {
+    padding: 40px;
+    text-align: center;
+    background: var(--primary);
+    color: var(--secondary);
+    border-bottom-style: solid;
+}
+  
+main {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
