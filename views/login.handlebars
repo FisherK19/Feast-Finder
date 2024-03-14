@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Recipe Finder</title>
-    <link rel="stylesheet" href="/public/css/login.css"> <!-- Adjust the path based on your project structure -->
+    <link rel="stylesheet" href="/public/css/login.css"> 
 </head>
 <body>
     <br>
@@ -12,33 +12,27 @@
     <br>
     <div class="container">
         <h1>Login</h1>
-        <p style="font-size:x-small;">
-            Type you're username here. Please
-            <br> make sure it is not you're 
-            <br>name or Email.
+        <p style="font-size: x-small;">
+            Please enter your Email here. 
         </p>
         <form action="/login" method="POST">
-            <br>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input style="background-color: grey;" type="email" id="email" name="email" required>
                 <br><br>
                 <p style="font-size: x-small;">
-                    Type you're password here. Please
-                    <br> make sure it is not you're name or
-                    <br>other identifying features. 
+                    Type you're password here. 
                 </p>
-                <br>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <input style="background-color: grey;" type="password" id="password" name="password" required>
             </div>
             <br><br>
-            <button type="submit">Login</button>
+            <button style="background-color: grey;" type="submit">Login</button>
         </form>
         <br>
-        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        <p>Don't have an account? <a style="color: red;" href="/signup">Sign up</a></p>
     </div>
 </body>
 </html>
