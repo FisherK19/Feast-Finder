@@ -25,13 +25,18 @@ app.use(express.urlencoded({ extended: false }));
 // Middleware to serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware for authentication
+// Exclude the login route from authentication middleware
+const loginRoute = require('./controllers/api/loginRoute');
+app.use('/login', loginRoute);
+
+// Middleware for authentication (applied to routes after login)
 app.use(verifyToken);
 
 // Middleware for your controllers
-const recipeRoutes = require('./controllers/api/recipeRoutes');
+const recipeController = require('./controllers/recipecontroller');
 const userRoutes = require('./controllers/api/userRoutes');
-app.use('/recipes', recipeRoutes);
+const recipeRoutes = require('./controllers/api/recipeRoutes'); 
+app.use('/recipes', recipeRoutes); 
 app.use('/users', userRoutes);
 
 // Error handling middleware
@@ -43,3 +48,4 @@ app.use((err, req, res, next) => {
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
 });
+
