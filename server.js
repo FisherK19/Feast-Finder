@@ -39,22 +39,37 @@ const userRoutes = require('./controllers/api/userRoutes');
 const recipeRoutes = require('./controllers/api/recipeRoutes'); 
 const loginRoute = require('./controllers/api/loginRoute');
 const registerRoute = require('./controllers/api/registerRoute');
-// Route handler for the "/login" endpoint
-app.get('/login', (req, res) => {
-  res.render('login'); // Renders the login page
+
+// Use Router for routes
+const router = express.Router();
+
+// Define routes
+router.get('/login', (req, res) => {
+    res.render('login'); // Renders the login page
 });
 
-// Route handler for the "/register" endpoint
-app.get('/register', (req, res) => {
-  res.render('register'); 
+router.get('/register', (req, res) => {
+    res.render('register'); 
 });
 
-// Route handler for the "/recipe" endpoint
-app.get('/recipe', (req, res) => {
-  res.render('recipe'); 
+router.get('/recipe', (req, res) => {
+    res.render('recipe'); 
 });
 
+// Handle registration form submission
+router.post('/register', (req, res) => {
+    // Handle registration logic here
+    res.send('main');
+});
 
+// Handle login form submission
+router.post('/login', (req, res) => {
+    // Handle login logic here
+    res.send('main');
+});
+
+// Use the router middleware
+app.use('/', router);
 
 // Route handler for the root URL
 app.get('/', (req, res) => {
@@ -63,10 +78,10 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  handleError(err, res);
+    handleError(err, res);
 });
 
 // Sync Sequelize models with the database and start the server
 sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening'));
+    app.listen(PORT, () => console.log('Now listening'));
 });
