@@ -1,14 +1,11 @@
-<!-- views/recipe.handlebars -->
-
 {{!< layouts/layout}}
 
 <link rel="stylesheet" href="/css/recipe.css"> 
 <h1>Recipes</h1>
 
-
 <form action="/recipes" method="POST">
-    <label for="recipe_name">Recipe Name:</label><br>
-    <input type="text" id="recipe_name" name="recipe_name"><br>
+    <label for="recipeName">Recipe Name:</label><br>
+    <input type="text" id="recipeName" name="recipeName"><br>
     <label for="ingredients">Ingredients:</label><br>
     <textarea id="ingredients" name="ingredients" rows="4" cols="50"></textarea><br>
     <label for="directions">Directions:</label><br>
@@ -17,9 +14,14 @@
 </form>
 
 {{#each recipes}}
-    <div>
-        <h3>{{recipe_name}}</h3>
-        <p>Ingredients: {{ingredients}}</p>
-        <p>Directions: {{directions}}</p>
-    </div>
+  <div class="recipe">
+    <h2>{{recipeName}}</h2>
+    <p><strong>Ingredients:</strong> {{ingredients}}</p>
+    <p><strong>Directions:</strong> {{directions}}</p>
+    <a href="/recipes/{{id}}/edit">Edit</a> <!-- Link to edit recipe -->
+    <form action="/recipes/{{id}}?_method=DELETE" method="post"> <!-- Form to delete recipe -->
+      <button type="submit">Delete</button>
+    </form>
+  </div>
 {{/each}}
+
