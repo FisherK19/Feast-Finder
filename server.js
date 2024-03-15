@@ -70,6 +70,11 @@ router.post('/login', (req, res) => {
     res.redirect('/');
 });
 
+// Route handler for creating a new recipe
+router.post('/recipes', (req, res) => {
+    // Include the logic for creating a new recipe here
+});
+
 // Use the router middleware
 app.use('/', router);
 
