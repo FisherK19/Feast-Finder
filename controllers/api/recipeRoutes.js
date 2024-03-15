@@ -1,27 +1,38 @@
-// controllers/api/recipeRoutes.js
-
+// Import required modules
 const express = require('express');
 const router = express.Router();
 const Recipe = require('../../models/recipe');
 
 // Route handler for getting recipes
 router.get('/', async (req, res) => {
-    try {
-        const recipes = await Recipe.findAll();
-        res.render('recipe', { recipes });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    // Logic to fetch all recipes from the database
+    const recipes = await Recipe.findAll();
+
+    // Render the recipe page with the list of recipes
+    res.render('recipe', { recipes });
 });
 
 // Route handler for creating a new recipe
 router.post('/', async (req, res) => {
     try {
-        const { recipe_name, ingredients, directions } = req.body;
-        const newRecipe = await Recipe.create({ recipe_name, ingredients, directions });
+        // Logic to create a new recipe
+        
+        // Retrieve the recipe data from the request body
+        const { recipeName, ingredients, directions } = req.body;
+
+        // Logic to create a new recipe using Sequelize or any other ORM
+        const newRecipe = await Recipe.create({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions
+        });
+
+        // Redirect to the recipes page after successful submission
         res.redirect('/recipes');
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        // Handle any errors that occur during recipe creation
+        console.error('Error creating recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
