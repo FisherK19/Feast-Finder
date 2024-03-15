@@ -1,41 +1,32 @@
-// Import required modules
+// controllers/api/recipeRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../../models/recipe'); // Correct import statement for Recipe model
-const recipeController = require('../recipecontroller'); // Correct import statement for recipeController
+const Recipe = require('../../models/recipe');
 
-// Define routes
-router.get('/', recipeController.getRecipes);
-router.post('/', recipeController.createRecipe);
-router.put('/:id', recipeController.updateRecipe);
-router.delete('/:id', recipeController.deleteRecipe);
-
-// Route handler for creating a new recipe
-router.post('/recipes', async (req, res) => {
+// Route handler for getting recipes
+router.get('/', async (req, res) => {
     try {
-        // Retrieve the recipe data from the request body
-        const { recipeName, ingredients, directions } = req.body;
-
-        // You can add validation logic here to ensure that all required fields are provided
-
-        // Logic to create a new recipe using Sequelize or any other ORM
-        const newRecipe = await Recipe.create({
-            recipe_name: recipeName,
-            ingredients: ingredients,
-            directions: directions
-        });
-
-        // Send a success response
-        res.status(201).json({ message: 'Recipe created successfully', recipe: newRecipe });
+        const recipes = await Recipe.findAll();
+        res.render('recipe', { recipes });
     } catch (error) {
-        // Handle any errors that occur during recipe creation
-        console.error('Error creating recipe:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Export the router
+// Route handler for creating a new recipe
+router.post('/', async (req, res) => {
+    try {
+        const { recipe_name, ingredients, directions } = req.body;
+        const newRecipe = await Recipe.create({ recipe_name, ingredients, directions });
+        res.redirect('/recipes');
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;
+
 
 
 

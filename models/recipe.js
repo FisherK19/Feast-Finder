@@ -1,16 +1,12 @@
-// Import Sequelize and the required data types
-const { Model, DataTypes } = require('sequelize');
+// models/recipe.js
 
-// Import the Sequelize connection instance
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-// Define the Recipe model by extending Sequelize's Model class
 class Recipe extends Model {}
 
-// Initialize the Recipe model with the defined attributes and options
 Recipe.init(
   {
-    // Define the attributes/columns of the Recipe model
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -31,7 +27,6 @@ Recipe.init(
     }
   },
   {
-    // Configure the connection instance and table name
     sequelize,
     freezeTableName: true,
     underscored: true,
@@ -39,5 +34,5 @@ Recipe.init(
   }
 );
 
-// Export the Recipe model for use in other parts of the application
 module.exports = Recipe;
+
