@@ -59,13 +59,15 @@ router.get('/recipe', (req, res) => {
 // Handle registration form submission
 router.post('/register', (req, res) => {
     // Handle registration logic here
-    res.send('main');
+    // After successful registration, redirect the user to the login page
+    res.redirect('/login');
 });
 
 // Handle login form submission
 router.post('/login', (req, res) => {
     // Handle login logic here
-    res.send('main');
+    // After successful login, redirect the user to the home page
+    res.redirect('/');
 });
 
 // Use the router middleware
