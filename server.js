@@ -36,7 +36,6 @@ app.use(session({
 
 // Middleware for your controllers
 const userRoutes = require('./controllers/api/userRoutes');
-const recipeRoutes = require('./controllers/api/recipeRoutes'); 
 const loginRoute = require('./controllers/api/loginRoute');
 const registerRoute = require('./controllers/api/registerRoute');
 
@@ -52,7 +51,8 @@ router.get('/register', (req, res) => {
     res.render('register'); 
 });
 
-router.get('/recipe', (req, res) => {
+// Route for rendering the recipe page
+router.get('/recipes', (req, res) => {
     res.render('recipe'); 
 });
 
@@ -82,6 +82,10 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
     handleError(err, res);
 });
+
+// Include recipe routes
+const recipeRoutes = require('./controllers/api/recipeRoutes');
+app.use('/recipes', recipeRoutes);
 
 // Sync Sequelize models with the database and start the server
 sequelize.sync({ force: false }).then(() => {
