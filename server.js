@@ -4,6 +4,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const cors = require('cors'); // Import the CORS middleware
 const Recipe = require('./models/recipe');
 
 // Create an instance of the Express application
@@ -35,6 +36,10 @@ app.use(session({
     cookie: { secure: true } 
 }));
 
+app.use(cors({
+    origin: 'http://localhost:3001'
+}));
+
 // Middleware for your controllers
 const userRoutes = require('./controllers/api/userRoutes');
 const loginRoute = require('./controllers/api/loginRoute');
@@ -53,8 +58,16 @@ router.get('/register', (req, res) => {
 });
 
 // Route for rendering the recipe page
-router.get('/recipes', (req, res) => {
-    res.render('recipe'); 
+router.get('/recipes', async (req, res) => {
+    try {
+        // Fetch all recipes from the database
+        const recipes = await Recipe.findAll();
+        // Render the recipe page with the list of recipes
+        res.render('recipe', { recipes });
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Handle registration form submission
@@ -89,8 +102,10 @@ router.post('/recipes', async (req, res) => {
             directions: directions
         });
 
-        // Return the newly created recipe as JSON response
-        res.status(201).json(newRecipe);
+        // After creating the recipe, fetch the updated list of recipes
+        const recipes = await Recipe.findAll();
+        // Render the recipe page with the updated list of recipes
+        res.render('recipe', { recipes });
     } catch (error) {
         // Handle any errors that occur during recipe creation
         console.error('Error creating recipe:', error);

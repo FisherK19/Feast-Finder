@@ -1,3 +1,6 @@
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: false }));
+
 // Middleware to verify user authentication
 const authenticateUser = (req, res, next) => {
   // Check if the user is authenticated (e.g., check session or cookie)

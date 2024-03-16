@@ -1,7 +1,7 @@
 // Import required modules
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../../models/recipe');
+const Recipe = require('../../models/recipe'); // Correct import path
 
 // Route handler for getting recipes
 router.get('/', async (req, res) => {
@@ -18,16 +18,16 @@ router.post('/', async (req, res) => {
         // Logic to create a new recipe
         
         // Retrieve the recipe data from the request body
-        const { recipeName, ingredients, directions } = req.body;
+        const { recipe_name, ingredients, directions } = req.body;
 
         // Ensure all required fields are provided
-        if (!recipeName || !ingredients || !directions) {
-            return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
+        if (!recipe_name || !ingredients || !directions) {
+            return res.status(400).json({ error: "Please provide values for recipe_name, ingredients, and directions." });
         }
 
         // Logic to create a new recipe using Sequelize or any other ORM
         const newRecipe = await Recipe.create({
-            recipe_name: recipeName,
+            recipe_name: recipe_name,
             ingredients: ingredients,
             directions: directions
         });
@@ -41,12 +41,26 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Create a new recipe
+exports.createRecipe = async (req, res) => {
+    try {
+        console.log("Request Body:", req.body); // Log the request body
+
+        const { recipeName, ingredients, directions } = req.body;
+        const recipe = await Recipe.create({ recipe_name: recipeName, ingredients, directions }); 
+        res.status(201).json(recipe); // Send the created recipe as JSON response
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // Handle errors
+    }
+};
+
+
 // Route handler for rendering the form to edit a recipe
 router.get('/:id/edit', async (req, res) => {
     try {
         const recipeId = req.params.id;
         // Logic to fetch the details of the recipe to be edited from the database based on the recipeId
-        // Example:
+        
         const recipe = await Recipe.findByPk(recipeId);
         res.render('editRecipe', { recipe }); // Render the form with the existing recipe data
     } catch (error) {
@@ -56,6 +70,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
