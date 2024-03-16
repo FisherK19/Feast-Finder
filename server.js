@@ -4,8 +4,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const Recipe = require('./models/recipe'); // Import your Recipe model
-const recipeRoutes = require('./controllers/api/recipeRoutes'); // Import your recipe routes
+const Recipe = require('./models/recipe');
 
 // Create an instance of the Express application
 const app = express();
@@ -13,13 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 const sequelize = require('./config/connection');
 
-// Configure Handlebars with runtime options
-const hbs = exphbs.create({
-    // Configure Handlebars to allow accessing prototype properties
-    allowProtoPropertiesByDefault: true,
-    // Configure Handlebars to allow accessing properties of nested objects
-    allowProtoMethodsByDefault: true
-});
+const hbs = exphbs.create({});
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -39,7 +32,7 @@ app.use(session({
     secret: 'your_secret_key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
+    cookie: { secure: true } 
 }));
 
 // Middleware for your controllers
@@ -56,12 +49,12 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    res.render('register');
+    res.render('register'); 
 });
 
 // Route for rendering the recipe page
 router.get('/recipes', (req, res) => {
-    res.render('recipe');
+    res.render('recipe'); 
 });
 
 // Handle registration form submission
@@ -81,44 +74,46 @@ router.post('/login', (req, res) => {
 // Route handler for creating a new recipe
 router.post('/recipes', async (req, res) => {
     try {
-        // Extract recipe data from request body
+        // Extract recipe data from the request body
         const { recipeName, ingredients, directions } = req.body;
 
-        // Check if any required field is missing
+        // Validate that all required fields are provided
         if (!recipeName || !ingredients || !directions) {
             return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
         }
 
-        // Logic to create a new recipe using Sequelize
+        // Create a new recipe using Sequelize
         const newRecipe = await Recipe.create({
             recipe_name: recipeName,
             ingredients: ingredients,
             directions: directions
         });
 
-        res.redirect('/recipes'); // Redirect to the recipes page after successful submission
+        // Return the newly created recipe as JSON response
+        res.status(201).json(newRecipe);
     } catch (error) {
-        // Handle errors
+        // Handle any errors that occur during recipe creation
         console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-// Include recipe routes
-app.use('/recipes', recipeRoutes);
 
 // Use the router middleware
 app.use('/', router);
 
 // Route handler for the root URL
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('home'); 
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
     handleError(err, res);
 });
+
+// Include recipe routes
+const recipeRoutes = require('./controllers/api/recipeRoutes');
+app.use('/recipes', recipeRoutes);
 
 // Sync Sequelize models with the database and start the server
 sequelize.sync({ force: false }).then(() => {
