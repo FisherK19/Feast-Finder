@@ -24,7 +24,12 @@ Recipe.init(
     directions: {
       type: DataTypes.TEXT,
       allowNull: false,
-    }
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, 
+    },
   },
   {
     sequelize,
@@ -35,4 +40,5 @@ Recipe.init(
 );
 
 module.exports = Recipe;
+
 
