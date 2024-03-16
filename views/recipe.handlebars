@@ -16,36 +16,24 @@
     <button type="submit">Submit</button>
 </form>
 
-
 {{#each recipes}}
   <div class="recipe">
-    <h2>{{recipeName}}</h2>
-    <p><strong>Ingredients:</strong> {{ingredients}}</p>
-    <p><strong>Directions:</strong> {{directions}}</p>
-    <a href="/recipes/{{id}}/edit">Edit</a> <!-- Link to edit recipe -->
-    <form action="/recipes/{{id}}?_method=DELETE" method="post"> <!-- Form to delete recipe -->
+    <h2>{{this.recipe_name}}</h2>
+    <p><strong>Ingredients:</strong> {{this.ingredients}}</p>
+    <p><strong>Directions:</strong> {{this.directions}}</p>
+    <a href="/recipes/{{this.id}}/edit">Edit</a> <!-- Link to edit recipe -->
+    <form action="/recipes/{{this.id}}?_method=DELETE" method="post"> <!-- Form to delete recipe -->
       <button type="submit">Delete</button>
     </form>
   </div>
 {{/each}}
 
-<script>
-function validateForm() {
-    var recipeName = document.getElementById("recipeName").value;
-    var ingredients = document.getElementById("ingredients").value;
-    var directions = document.getElementById("directions").value;
+<script src="/js/add-dish.js"></script>
+<script src="/js/edit-dish.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
 
-    console.log("Recipe Name:", recipeName);
-    console.log("Ingredients:", ingredients);
-    console.log("Directions:", directions);
 
-    if (recipeName === "" || ingredients === "" || directions === "") {
-        alert("Please fill out all fields.");
-        return false; // Prevent form submission
-    }
 
-    return true;
-}
-</script>
 
 

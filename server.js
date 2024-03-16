@@ -1,4 +1,5 @@
-// Import required modules
+// Import required modulesapp.use(express.urlencoded({ extended: false }));
+
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
@@ -38,7 +39,7 @@ app.use(session({
 
 app.use(cors({
     origin: 'http://localhost:3001'
-}));
+  }));
 
 // Middleware for your controllers
 const userRoutes = require('./controllers/api/userRoutes');
@@ -62,6 +63,7 @@ router.get('/recipes', async (req, res) => {
     try {
         // Fetch all recipes from the database
         const recipes = await Recipe.findAll();
+
         // Render the recipe page with the list of recipes
         res.render('recipe', { recipes });
     } catch (error) {
@@ -102,10 +104,8 @@ router.post('/recipes', async (req, res) => {
             directions: directions
         });
 
-        // After creating the recipe, fetch the updated list of recipes
-        const recipes = await Recipe.findAll();
-        // Render the recipe page with the updated list of recipes
-        res.render('recipe', { recipes });
+        // Return the newly created recipe as JSON response
+        res.status(201).json(newRecipe);
     } catch (error) {
         // Handle any errors that occur during recipe creation
         console.error('Error creating recipe:', error);
@@ -134,3 +134,4 @@ app.use('/recipes', recipeRoutes);
 sequelize.sync({ force: false }).then(() => {
     app.listen(PORT, () => console.log('Now listening'));
 });
+

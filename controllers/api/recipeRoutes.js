@@ -5,11 +5,16 @@ const Recipe = require('../../models/recipe'); // Correct import path
 
 // Route handler for getting recipes
 router.get('/', async (req, res) => {
-    // Logic to fetch all recipes from the database
-    const recipes = await Recipe.findAll();
+    try {
+        // Logic to fetch all recipes from the database
+        const recipes = await Recipe.findAll();
 
-    // Render the recipe page with the list of recipes
-    res.render('recipe', { recipes });
+        // Render the recipe page with the list of recipes
+        res.render('recipe', { recipes });
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Route handler for creating a new recipe
@@ -35,25 +40,25 @@ router.post('/', async (req, res) => {
         // Redirect to the recipes page after successful submission
         res.redirect('/recipes');
     } catch (error) {
-        // Handle any errors that occur during recipe creation
         console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Create a new recipe
-exports.createRecipe = async (req, res) => {
+// Route handler for deleting a recipe
+router.delete('/:id', async (req, res) => {
     try {
-        console.log("Request Body:", req.body); // Log the request body
+        const recipeId = req.params.id;
+        // Logic to find the recipe by its ID and delete it from the database
+        await Recipe.destroy({ where: { id: recipeId } });
 
-        const { recipeName, ingredients, directions } = req.body;
-        const recipe = await Recipe.create({ recipe_name: recipeName, ingredients, directions }); 
-        res.status(201).json(recipe); // Send the created recipe as JSON response
+        // Redirect to the recipes page after successful deletion
+        res.redirect('/recipes');
     } catch (error) {
-        res.status(500).json({ message: error.message }); // Handle errors
+        console.error('Error deleting recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-};
-
+});
 
 // Route handler for rendering the form to edit a recipe
 router.get('/:id/edit', async (req, res) => {
@@ -70,6 +75,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 

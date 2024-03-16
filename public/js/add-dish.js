@@ -1,16 +1,17 @@
-async function newRecipeHandler(event) {
+// Function to handle form submission when adding a new recipe
+async function addRecipeHandler(event) {
   event.preventDefault();
-
-  const recipeName = document.querySelector('#recipe_name').value;
+  
+  const recipeName = document.querySelector('#recipeName').value;
   const ingredients = document.querySelector('#ingredients').value;
-  const instructions = document.querySelector('#instructions').value;
+  const directions = document.querySelector('#directions').value;
 
-  const response = await fetch(`/api/recipes`, {
+  const response = await fetch('/recipes', {
     method: 'POST',
     body: JSON.stringify({
-      recipe_name: recipeName,
+      recipeName,
       ingredients,
-      instructions,
+      directions,
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -18,14 +19,23 @@ async function newRecipeHandler(event) {
   });
 
   if (response.ok) {
-    document.location.replace('/');
+    document.location.reload();
   } else {
     alert('Failed to add recipe');
   }
 }
+document.addEventListener('DOMContentLoaded', function() {
+  // Add event listener to a form submit button
+  document.querySelector('.submit-button').addEventListener('click', function(event) {
+      event.preventDefault();
+      // Code to handle form submission
+  });
 
-document
-.querySelector('.new-recipe-form')
-.addEventListener('submit', newRecipeHandler);
+  // Manipulate DOM elements
+  document.querySelector('.some-element').textContent = 'Updated text';
+});
+
+
+
 
   
