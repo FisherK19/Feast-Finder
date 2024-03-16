@@ -1,8 +1,10 @@
 const sequelize = require('../config/connection');
+
 const Recipe = require('../models/recipe');
 const recipeData = require('./recipe-seed.json');
 
-// Function to seed the database with recipe data
+
+// Function to seed the database with recipe and user data
 const seedDatabase = async () => {
   try {
     // Synchronize the Sequelize models with the database
@@ -14,8 +16,14 @@ const seedDatabase = async () => {
       returning: true,
     });
 
+    // Use the bulkCreate method to insert the user data into the User table
+    const users = await User.bulkCreate(userData, {
+      individualHooks: true,
+      returning: true,
+    });
+
     // Log success message
-    console.log('Database seeded successfully with recipe data.');
+    console.log('Database seeded successfully with recipe and user data.');
     
     // Exit the process
     process.exit(0);
