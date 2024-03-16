@@ -1,8 +1,8 @@
 const sequelize = require('../config/connection');
-const Recipe = require('../models/recipe'); // Import the Recipe model
-const User = require('../models/user'); // Import the User model
-const recipeData = require('./recipe-seeds.json'); // Import the recipe data from JSON file
-const userData = require('./user-seeds.json'); // Import the user data from JSON file
+
+const Recipe = require('../models/recipe');
+const recipeData = require('./recipe-seed.json');
+
 
 // Function to seed the database with recipe and user data
 const seedDatabase = async () => {
@@ -38,3 +38,4 @@ const seedDatabase = async () => {
 
 // Call the seedDatabase function to start seeding the database
 seedDatabase();
+

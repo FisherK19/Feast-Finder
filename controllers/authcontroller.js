@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res) => {
   try {
@@ -42,11 +41,8 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, 'your_secret_key', { expiresIn: '1h' });
-
-    // Respond with JWT token
-    res.status(200).json({ token });
+    // Respond with success message
+    res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
