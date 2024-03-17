@@ -3,7 +3,7 @@ const router = express.Router();
 const Recipe = require('../../models/recipe');
 
 // Recipes route
-router.get('/recipes', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         // Retrieve username from session
         const username = req.session.username;
@@ -19,7 +19,7 @@ router.get('/recipes', async (req, res) => {
     }
 });
 
-router.post('/recipes', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { recipeName, ingredients, directions } = req.body;
         if (!recipeName || !ingredients || !directions) {
@@ -40,14 +40,14 @@ router.post('/recipes', async (req, res) => {
 });
 
 // Edit Recipe Route (GET)
-router.get('/recipes/:id/edit', async (req, res) => {
+router.get('/:id/edit', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id);
         if (!recipe) {
             return res.status(404).json({ error: 'Recipe not found' });
         }
         // Render a form to edit the recipe
-        res.render('recipe', { recipe, editing: true });
+        res.render('edit-recipe', { recipe });
     } catch (error) {
         console.error('Error editing recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -55,14 +55,21 @@ router.get('/recipes/:id/edit', async (req, res) => {
 });
 
 // Edit Recipe Route (POST)
-router.post('/recipes/:id/edit', async (req, res) => {
+router.post('/:id/edit', async (req, res) => {
     try {
         const { recipeName, ingredients, directions } = req.body;
         const recipeId = req.params.id;
-        await Recipe.update(
-            { recipe_name: recipeName, ingredients: ingredients, directions: directions },
-            { where: { id: recipeId } }
-        );
+        // Find the recipe by ID
+        const recipe = await Recipe.findByPk(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Update the recipe
+        await recipe.update({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions
+        });
         res.redirect('/recipes'); // Redirect back to the recipe page
     } catch (error) {
         console.error('Error updating recipe:', error);
@@ -71,7 +78,7 @@ router.post('/recipes/:id/edit', async (req, res) => {
 });
 
 // Delete Recipe Route (POST)
-router.post('/recipes/:id/delete', async (req, res) => {
+router.post('/:id/delete', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id);
         if (!recipe) {
@@ -87,6 +94,7 @@ router.post('/recipes/:id/delete', async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
