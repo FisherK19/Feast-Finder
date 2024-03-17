@@ -20,6 +20,7 @@ function searchFormHandler(event) {
     const query = document.querySelector('#searchInput').value.trim();
     searchRecipes(query);
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     // Add event listener to the search form submit button
     document.querySelector('.search-form').addEventListener('submit', searchFormHandler);

@@ -9,19 +9,24 @@
 <body>
     <h1>Recipes</h1>
 
-    <!-- Container for Rendered Recipes -->
-    <div class="recipes-container">
-        {{#each recipes}}
-            <div class="recipe-card">
-                <h2>{{this.recipe_name}}</h2>
-                <p><strong>Ingredients:</strong> {{this.ingredients}}</p>
-                <p><strong>Directions:</strong> {{this.directions}}</p>
-            </div>
-        {{/each}}
-    </div>
+    {{#each recipes}}
+        <div class="recipe-card">
+            <h2>{{this.recipeName}}</h2>
+            <p><strong>Ingredients:</strong> {{this.ingredients}}</p>
+            <p><strong>Directions:</strong> {{this.directions}}</p>
+            <!-- Edit Button -->
+            <form action="/recipes/{{this.id}}/edit" method="GET">
+                <button type="submit">Edit</button>
+            </form>
+            <!-- Delete Button -->
+            <form action="/recipes/{{this.id}}/delete" method="POST">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    {{/each}}
 
     <!-- HTML Form -->
-    <form id="addRecipeForm">
+    <form id="addRecipeForm" action="/recipes" method="POST">
         <label for="recipeName">Recipe Name:</label><br>
         <input type="text" id="recipeName" name="recipeName" required><br>
         
@@ -41,6 +46,10 @@
     <script src="/js/main.js"></script>
 </body>
 </html>
+
+
+
+
 
 
 

@@ -9,7 +9,7 @@ async function addRecipeHandler(event) {
   const ingredients = document.querySelector('#ingredients').value;
   const directions = document.querySelector('#directions').value;
 
-  const response = await fetch('/recipes', {
+  const response = await fetch('/recipes', { // Change the URL to match your server route
       method: 'POST',
       body: JSON.stringify({
           recipeName,
@@ -40,6 +40,7 @@ function renderRecipe(recipe) {
   `;
   recipeContainer.appendChild(recipeCard);
 }
+
 
 
 

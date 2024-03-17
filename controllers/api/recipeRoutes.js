@@ -1,27 +1,95 @@
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../models/recipe');
+const Recipe = require('../../models/recipe');
 
-// POST request to add a new recipe
-router.post('/', async (req, res) => {
+// Recipes route
+router.get('/recipes', async (req, res) => {
+    try {
+        // Retrieve username from session
+        const username = req.session.username;
+        // Retrieve recipeName from session
+        const recipeName = req.session.recipeName;
+        // Fetch recipes from the database
+        const recipes = await Recipe.findAll();
+        // Render the recipes page with the username, recipeName, and recipes
+        res.render('recipe', { username, recipeName, recipes });
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post('/recipes', async (req, res) => {
     try {
         const { recipeName, ingredients, directions } = req.body;
-        // Validate the data here if needed
-
+        if (!recipeName || !ingredients || !directions) {
+            return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
+        }
         const newRecipe = await Recipe.create({
             recipe_name: recipeName,
             ingredients: ingredients,
             directions: directions
         });
-
-        res.status(201).json(newRecipe);
+        // Save recipeName in session
+        req.session.recipeName = recipeName;
+        res.redirect('/recipes'); // Redirect to refresh the page
     } catch (error) {
         console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+// Edit Recipe Route (GET)
+router.get('/recipes/:id/edit', async (req, res) => {
+    try {
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Render a form to edit the recipe
+        res.render('recipe', { recipe, editing: true });
+    } catch (error) {
+        console.error('Error editing recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Edit Recipe Route (POST)
+router.post('/recipes/:id/edit', async (req, res) => {
+    try {
+        const { recipeName, ingredients, directions } = req.body;
+        const recipeId = req.params.id;
+        await Recipe.update(
+            { recipe_name: recipeName, ingredients: ingredients, directions: directions },
+            { where: { id: recipeId } }
+        );
+        res.redirect('/recipes'); // Redirect back to the recipe page
+    } catch (error) {
+        console.error('Error updating recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Delete Recipe Route (POST)
+router.post('/recipes/:id/delete', async (req, res) => {
+    try {
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Delete the recipe from the database
+        await recipe.destroy();
+        res.redirect('/recipes'); // Redirect back to the recipe page
+    } catch (error) {
+        console.error('Error deleting recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;
+
+
+
 
 
 
