@@ -29,10 +29,8 @@ async function editRecipeHandler(event) {
 document.addEventListener('DOMContentLoaded', function() {
   // Add event listener to the edit form submit button
   document.querySelector('.edit-form .submit-button').addEventListener('click', editRecipeHandler);
-
-  // Manipulate DOM elements
-  document.querySelector('.some-element').textContent = 'Updated text';
 });
+
 
 
 

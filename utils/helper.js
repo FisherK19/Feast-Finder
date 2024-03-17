@@ -1,4 +1,3 @@
-// Example helper functions
 
 // Function to format response data
 const formatResponse = (data) => {

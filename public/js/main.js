@@ -1,5 +1,3 @@
-// Example main.js
-
 // Function to handle deletion of a recipe
 async function deleteRecipeHandler(event) {
   if (event.target.hasAttribute('data-id')) {

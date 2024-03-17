@@ -1,80 +1,97 @@
-// Import required modules
 const express = require('express');
 const router = express.Router();
-const Recipe = require('../../models/recipe'); // Correct import path
+const Recipe = require('../../models/recipe');
 
-// Route handler for getting recipes
-router.get('/', async (req, res) => {
+// Recipes route
+router.get('/recipes', async (req, res) => {
     try {
-        // Logic to fetch all recipes from the database
+        // Retrieve username from session
+        const username = req.session.username;
+        // Retrieve recipeName from session
+        const recipeName = req.session.recipeName;
+        // Fetch recipes from the database
         const recipes = await Recipe.findAll();
-
-        // Render the recipe page with the list of recipes
-        res.render('recipe', { recipes });
+        // Render the recipes page with the username, recipeName, and recipes
+        res.render('recipe', { username, recipeName, recipes });
     } catch (error) {
         console.error('Error fetching recipes:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Route handler for creating a new recipe
-router.post('/', async (req, res) => {
+router.post('/recipes', async (req, res) => {
     try {
-        // Logic to create a new recipe
-        
-        // Retrieve the recipe data from the request body
-        const { recipe_name, ingredients, directions } = req.body;
-
-        // Ensure all required fields are provided
-        if (!recipe_name || !ingredients || !directions) {
-            return res.status(400).json({ error: "Please provide values for recipe_name, ingredients, and directions." });
+        const { recipeName, ingredients, directions } = req.body;
+        if (!recipeName || !ingredients || !directions) {
+            return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
         }
-
-        // Logic to create a new recipe using Sequelize or any other ORM
         const newRecipe = await Recipe.create({
-            recipe_name: recipe_name,
+            recipe_name: recipeName,
             ingredients: ingredients,
             directions: directions
         });
-
-        // Redirect to the recipes page after successful submission
-        res.redirect('/recipes');
+        // Save recipeName in session
+        req.session.recipeName = recipeName;
+        res.redirect('/recipes'); // Redirect to refresh the page
     } catch (error) {
         console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Route handler for deleting a recipe
-router.delete('/:id', async (req, res) => {
+// Edit Recipe Route (GET)
+router.get('/recipes/:id/edit', async (req, res) => {
     try {
-        const recipeId = req.params.id;
-        // Logic to find the recipe by its ID and delete it from the database
-        await Recipe.destroy({ where: { id: recipeId } });
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Render a form to edit the recipe
+        res.render('recipe', { recipe, editing: true });
+    } catch (error) {
+        console.error('Error editing recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
-        // Redirect to the recipes page after successful deletion
-        res.redirect('/recipes');
+// Edit Recipe Route (POST)
+router.post('/recipes/:id/edit', async (req, res) => {
+    try {
+        const { recipeName, ingredients, directions } = req.body;
+        const recipeId = req.params.id;
+        await Recipe.update(
+            { recipe_name: recipeName, ingredients: ingredients, directions: directions },
+            { where: { id: recipeId } }
+        );
+        res.redirect('/recipes'); // Redirect back to the recipe page
+    } catch (error) {
+        console.error('Error updating recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Delete Recipe Route (POST)
+router.post('/recipes/:id/delete', async (req, res) => {
+    try {
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Delete the recipe from the database
+        await recipe.destroy();
+        res.redirect('/recipes'); // Redirect back to the recipe page
     } catch (error) {
         console.error('Error deleting recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Route handler for rendering the form to edit a recipe
-router.get('/:id/edit', async (req, res) => {
-    try {
-        const recipeId = req.params.id;
-        // Logic to fetch the details of the recipe to be edited from the database based on the recipeId
-        
-        const recipe = await Recipe.findByPk(recipeId);
-        res.render('editRecipe', { recipe }); // Render the form with the existing recipe data
-    } catch (error) {
-        console.error('Error fetching recipe details for editing:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 module.exports = router;
+
+
+
+
+
 
 
 
