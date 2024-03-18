@@ -45,7 +45,7 @@ To run Feast Finder locally, follow these steps:
 [Insert screenshots here]
 
 ## Feastfinder Link:
-
+(https://feast-finder-a0963eb36267.herokuapp.com/)
 ## Logo
 ![Feast Finder Logo](public/images/FeastFinder.png)
 
