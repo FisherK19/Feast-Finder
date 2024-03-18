@@ -1,13 +1,33 @@
-// Function to handle form submission
-const submitRecipeForm = async (event) => {
+// Function to handle form submission for adding a recipe with image upload
+async function addRecipeHandler(event) {
     event.preventDefault();
-    const formData = new FormData(document.getElementById('recipeForm'));
+
+    // Get the form data
+    const formData = new FormData(document.getElementById('addRecipeForm'));
+    const fileInput = document.getElementById('imageUpload');
+    const file = fileInput.files[0];
+
+    // Append the image file to the form data
+    formData.append('image', file);
+
     try {
-        const response = await fetch('/recipes', {
+        // Send a fetch request to upload the image
+        const imageResponse = await fetch('/recipes/upload-image', {
             method: 'POST',
             body: formData
         });
-        if (response.ok) {
+
+        if (!imageResponse.ok) {
+            throw new Error('Failed to upload image');
+        }
+
+        // Proceed with recipe submission after image upload
+        const recipeResponse = await fetch('/recipes', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (recipeResponse.ok) {
             // Recipe added successfully
             window.location.href = '/recipes'; // Redirect to recipe list page
         } else {
@@ -17,29 +37,7 @@ const submitRecipeForm = async (event) => {
     } catch (error) {
         console.error('Error adding recipe:', error);
     }
-};
+}
 
-// Event listener to handle form submission
-document.getElementById('recipeForm').addEventListener('submit', submitRecipeForm);
-
-// Event listener to handle image upload
-const imageInput = document.getElementById('imageUpload');
-imageInput.addEventListener('change', async (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    try {
-        const response = await fetch('/recipes/upload-image', {
-            method: 'POST',
-            body: formData
-        });
-        if (response.ok) {
-            // Image uploaded successfully
-        } else {
-            // Handle upload error
-            console.error('Failed to upload image');
-        }
-    } catch (error) {
-        console.error('Error uploading image:', error);
-    }
-});
+// Event listener to handle form submission for adding a recipe
+document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);

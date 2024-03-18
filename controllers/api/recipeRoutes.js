@@ -4,9 +4,6 @@ const Recipe = require('../../models/recipe');
 const { Op } = require('sequelize');
 const multer = require('multer');
 
-// Set up multer for handling file uploads
-const upload = multer({ dest: 'uploads/' });
-
 // Recipes route
 router.get('/recipes', async (req, res) => {
     try {
@@ -99,24 +96,30 @@ router.get('/search', async (req, res) => {
     }
 });
 
-// Image Upload Route (POST)
+// Set up multer for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Use unique filenames
+    }
+});
+const upload = multer({ storage: storage });
+
+// Route for uploading recipe image
 router.post('/upload-image', upload.single('image'), async (req, res) => {
     try {
-        const imageUrl = req.file.path; 
-        // Update the recipe record with the image URL
-        const recipe = await Recipe.findByPk(req.body.recipeId);
-        if (recipe) {
-            recipe.imageUrl = imageUrl;
-            await recipe.save();
-            res.status(200).json({ imageUrl });
-        } else {
-            res.status(404).json({ error: 'Recipe not found' });
-        }
+        const imageUrl = req.file.path; // Path to the uploaded image file
+        // Save imageUrl in the database or associate it with the recipe
+        // Respond with the URL of the uploaded image
+        res.status(200).json({ imageUrl });
     } catch (error) {
         console.error('Error uploading image:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 module.exports = router;
 
