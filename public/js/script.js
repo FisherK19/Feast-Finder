@@ -4,24 +4,9 @@ async function addRecipeHandler(event) {
 
     // Get the form data
     const formData = new FormData(document.getElementById('addRecipeForm'));
-    const fileInput = document.getElementById('imageUpload');
-    const file = fileInput.files[0];
-
-    // Append the image file to the form data
-    formData.append('image', file);
 
     try {
-        // Send a fetch request to upload the image
-        const imageResponse = await fetch('/recipes/upload-image', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!imageResponse.ok) {
-            throw new Error('Failed to upload image');
-        }
-
-        // Proceed with recipe submission after image upload
+        // Send a fetch request to submit the recipe
         const recipeResponse = await fetch('/recipes', {
             method: 'POST',
             body: formData
@@ -41,3 +26,32 @@ async function addRecipeHandler(event) {
 
 // Event listener to handle form submission for adding a recipe
 document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);
+
+// Function to handle form submission for uploading an image
+async function uploadImageHandler(event) {
+    event.preventDefault();
+
+    // Get the form data
+    const formData = new FormData(document.getElementById('uploadImageForm'));
+
+    try {
+        // Send a fetch request to upload the image
+        const imageResponse = await fetch('/recipes/upload-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (imageResponse.ok) {
+            // Image uploaded successfully
+            console.log('Image uploaded successfully');
+        } else {
+            // Handle image upload error
+            console.error('Failed to upload image');
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+    }
+}
+
+// Event listener to handle form submission for uploading an image
+document.getElementById('uploadImageForm').addEventListener('submit', uploadImageHandler);

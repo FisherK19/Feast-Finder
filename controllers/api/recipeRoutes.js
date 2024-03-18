@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const Recipe = require('../../models/recipe');
 const { Op } = require('sequelize');
-const multer = require('multer');
-
 // Recipes route
 router.get('/recipes', async (req, res) => {
     try {
@@ -105,11 +104,16 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname); // Use unique filenames
     }
 });
+
 const upload = multer({ storage: storage });
 
 // Route for uploading recipe image
 router.post('/upload-image', upload.single('image'), async (req, res) => {
     try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
         const imageUrl = req.file.path; // Path to the uploaded image file
         // Save imageUrl in the database or associate it with the recipe
         // Respond with the URL of the uploaded image
