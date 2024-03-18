@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Recipe = require('../../models/recipe');
+const { Op } = require('sequelize');
 
 // Recipes route
 router.get('/recipes', async (req, res) => {
@@ -73,8 +74,28 @@ router.post('/recipes/:id/delete', async (req, res) => {
     }
 });
 
-module.exports = router;
+// Search Recipe Route (GET)
+router.get('/search', async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+        const recipes = await Recipe.findAll({
+            where: {
+                recipe_name: {
+                    [Op.iLike]: `%${query}%`
+                }
+            }
+        });
+        res.render('recipe', { recipes });
+    } catch (error) {
+        console.error('Error searching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
+module.exports = router;
 
 
 

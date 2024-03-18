@@ -1,4 +1,5 @@
 const Recipe = require('../models/recipe');
+const { Op } = require('sequelize');
 
 // Create a new recipe
 exports.createRecipe = async (req, res, next) => {
@@ -66,6 +67,27 @@ exports.getRecipes = async (req, res, next) => {
         const recipes = await Recipe.findAll();
         
         // Send the recipes as JSON response
+        res.json(recipes);
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Search recipes
+exports.searchRecipes = async (req, res, next) => {
+    try {
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ message: 'Search query is required' });
+        }
+        const recipes = await Recipe.findAll({
+            where: {
+                recipe_name: {
+                    [Op.iLike]: `%${query}%`
+                }
+            }
+        });
         res.json(recipes);
     } catch (error) {
         // Handle errors

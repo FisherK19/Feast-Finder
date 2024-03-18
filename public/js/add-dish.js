@@ -1,47 +1,36 @@
-// add-dish.js
-
-// Function to handle editing a recipe
-async function editRecipeHandler(event) {
+// Function to handle adding a new recipe
+function addRecipeHandler(event) {
     event.preventDefault();
+    console.log('Form submitted');
 
     const form = event.target;
-    const recipeId = form.getAttribute('data-id');
-    const recipeName = form.querySelector(`#recipeName_${recipeId}`).value;
-    const ingredients = form.querySelector(`#ingredients_${recipeId}`).value;
-    const directions = form.querySelector(`#directions_${recipeId}`).value;
+    const recipeName = form.querySelector('#recipeName').value;
+    const ingredients = form.querySelector('#ingredients').value;
+    const directions = form.querySelector('#directions').value;
 
-    try {
-        const response = await fetch(`/recipes/${recipeId}/edit`, {
-            method: 'POST',
-            body: JSON.stringify({
-                recipeName,
-                ingredients,
-                directions,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.ok) {
-            // Update the UI with the updated recipe data
-            const updatedRecipe = await response.json();
-            // For example, you can update the existing recipe card with the updated recipe data
-        } else {
-            alert('Failed to edit recipe');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/recipes', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request succeeded
+                console.log('Recipe added successfully');
+                // Redirect to recipes page after adding a recipe
+                window.location.href = '/recipes';
+            } else {
+                // Handle errors
+                console.error('Failed to add recipe');
+                alert('Failed to add recipe. Please try again.');
+            }
         }
-    } catch (error) {
-        console.error('Error editing recipe:', error);
-        alert('An error occurred while editing the recipe');
-    }
+    };
+    xhr.send(JSON.stringify({
+        recipeName: recipeName,
+        ingredients: ingredients,
+        directions: directions
+    }));
 }
 
-// Event listener to handle form submission for editing
-document.addEventListener('submit', function(event) {
-    if (event.target.matches('.edit-form')) {
-        editRecipeHandler(event);
-    }
-});
-
-
-  
+// Event listener to handle form submission for adding a recipe
+document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);

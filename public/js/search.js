@@ -1,29 +1,47 @@
-const fetch = require('node-fetch');
+// Function to handle search form submission
+async function searchHandler(event) {
+    event.preventDefault();
 
-async function searchRecipes(query) {
+    // Get the search query from the form input
+    const searchQuery = document.getElementById('searchQuery').value;
+
     try {
-        const response = await fetch(`http://localhost:3001/recipes/search?query=${query}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch recipes');
+        // Send an AJAX request to the server to search for recipes
+        const response = await fetch(`/recipes/search?q=${encodeURIComponent(searchQuery)}`);
+        if (response.ok) {
+            // Parse the JSON response
+            const data = await response.json();
+            const recipes = data.recipes;
+
+            // Display the search results on the webpage
+            const searchResultsElement = document.getElementById('searchResults');
+            searchResultsElement.innerHTML = ''; // Clear previous search results
+
+            if (recipes.length > 0) {
+                recipes.forEach(recipe => {
+                    // Create HTML elements to display each recipe
+                    const recipeCard = document.createElement('div');
+                    recipeCard.classList.add('recipe-card');
+                    recipeCard.innerHTML = `
+                        <h2>${recipe.recipeName}</h2>
+                        <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
+                        <p><strong>Directions:</strong> ${recipe.directions}</p>
+                    `;
+                    searchResultsElement.appendChild(recipeCard);
+                });
+            } else {
+                // Display a message if no matching recipes found
+                searchResultsElement.innerHTML = '<p>No matching recipes found.</p>';
+            }
+        } else {
+            console.error('Failed to search recipes');
+            alert('An error occurred while searching recipes');
         }
-        const recipes = await response.json();
-        displayRecipes(recipes);
     } catch (error) {
-        console.error('Error searching for recipes:', error);
+        console.error('Error searching recipes:', error);
+        alert('An error occurred while searching recipes');
     }
 }
 
-function displayRecipes(recipes) {
-    // Display recipes in the UI
-}
-
-function searchFormHandler(event) {
-    event.preventDefault();
-    const query = document.querySelector('#searchInput').value.trim();
-    searchRecipes(query);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to the search form submit button
-    document.querySelector('.search-form').addEventListener('submit', searchFormHandler);
-});
+// Event listener to handle search form submission
+document.getElementById('searchForm').addEventListener('submit', searchHandler);

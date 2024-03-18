@@ -49,7 +49,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     // Handle login logic here
-    req.session.username = req.body.username; // Assuming username is stored in session
+    req.session.username = req.body.username; 
     res.redirect('/recipes');
 });
 
@@ -100,23 +100,42 @@ app.post('/recipes', async (req, res) => {
     }
 });
 
-// Edit Recipe Route (GET)
-app.get('/recipes/:id/edit', async (req, res) => {
-    try {
-        const recipe = await Recipe.findByPk(req.params.id);
-        if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
+    // Edit Recipe Route (GET)
+    app.get('/recipes/:id/edit', async (req, res) => {
+        try {
+            const recipe = await Recipe.findByPk(req.params.id);
+            if (!recipe) {
+                return res.status(404).json({ error: 'Recipe not found' });
+            }
+            // Render the edit form using the 'recipe.handlebars' template
+            res.render('recipe', { recipe, editing: true });
+        } catch (error) {
+            console.error('Error editing recipe:', error);
+            res.status(500).json({ error: 'Internal server error' });
         }
-        // Render a form to edit the recipe
-        res.render('recipe', { recipe });
+    });
+    
+        // Search Recipe Route
+app.get('/recipes/search', async (req, res) => {
+    try {
+        const searchQuery = req.query.query;
+        // Perform a database query to find recipes matching the search query
+        const searchResults = await Recipe.findAll({
+            where: {
+                recipeName: {
+                    [Op.iLike]: `%${searchQuery}%` // Case-insensitive search
+                }
+            }
+        });
+        res.json(searchResults);
     } catch (error) {
-        console.error('Error editing recipe:', error);
+        console.error('Error searching for recipes:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 
-// Update Recipe Route (POST)
+// Edit Recipe Route (POST)
 app.post('/recipes/:id/edit', async (req, res) => {
     try {
         const { recipeName, ingredients, directions } = req.body;
@@ -132,7 +151,7 @@ app.post('/recipes/:id/edit', async (req, res) => {
             ingredients: ingredients,
             directions: directions
         });
-        res.redirect('/recipes'); // Redirect back to the recipe page
+        res.sendStatus(200); // Send a success status
     } catch (error) {
         console.error('Error updating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
