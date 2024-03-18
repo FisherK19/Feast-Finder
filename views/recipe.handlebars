@@ -51,21 +51,22 @@
     {{/each}}
 
     <!-- HTML Form for Adding a Recipe -->
-    <form id="addRecipeForm" action="/recipes" method="POST" enctype="multipart/form-data">
-        <label for="recipeName">Recipe Name:</label><br>
-        <input type="text" id="recipeName" name="recipeName" required><br>
+<form id="addRecipeForm" action="/recipes" method="POST" enctype="multipart/form-data">
+    <label for="recipeName">Recipe Name:</label><br>
+    <input type="text" id="recipeName" name="recipeName" required><br>
 
-        <label for="ingredients">Ingredients:</label><br>
-        <textarea id="ingredients" name="ingredients" rows="4" cols="50" required></textarea><br>
+    <label for="ingredients">Ingredients:</label><br>
+    <textarea id="ingredients" name="ingredients" rows="4" cols="50" required></textarea><br>
 
-        <label for="directions">Directions:</label><br>
-        <textarea id="directions" name="directions" rows="4" cols="50" required></textarea><br>
+    <label for="directions">Directions:</label><br>
+    <textarea id="directions" name="directions" rows="4" cols="50" required></textarea><br>
 
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*"><br>
+    <label for="image">Upload Image:</label>
+    <input type="file" id="image" name="image" accept="image/*"><br>
 
-        <button type="submit">Submit</button>
-    </form>
+    <button type="submit">Submit</button>
+</form>
+
 
     <!-- JavaScript -->
     <script src="/js/add-dish.js"></script>
