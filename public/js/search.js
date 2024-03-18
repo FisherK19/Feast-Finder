@@ -1,6 +1,4 @@
 // Function to handle search form submission
-const { Op } = require('sequelize');
-
 async function searchHandler(event) {
     event.preventDefault();
 
