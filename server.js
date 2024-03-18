@@ -8,6 +8,7 @@ const cors = require('cors');
 const Recipe = require('./models/recipe');
 const sequelize = require('./config/connection');
 const recipeRoutes = require('./controllers/api/recipeRoutes');
+const multer = require('multer');
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -36,6 +37,26 @@ app.use(session({
 }));
 
 // Routes
+const upload = multer({ dest: 'uploads/' });
+
+// Define route handler for image upload
+app.post('/recipes/upload-image', upload.single('image'), async (req, res) => {
+    try {
+        const imageUrl = req.file.path; 
+        // Update the recipe record with the image URL
+        const recipe = await Recipe.findByPk(req.body.recipeId);
+        if (recipe) {
+            recipe.imageUrl = imageUrl;
+            await recipe.save();
+            res.status(200).json({ imageUrl });
+        } else {
+            res.status(404).json({ error: 'Recipe not found' });
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Home route
 app.get('/', (req, res) => {

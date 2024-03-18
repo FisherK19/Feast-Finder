@@ -1,4 +1,6 @@
 // Function to handle search form submission
+const { Op } = require('sequelize');
+
 async function searchHandler(event) {
     event.preventDefault();
 
@@ -7,7 +9,7 @@ async function searchHandler(event) {
 
     try {
         // Send an AJAX request to the server to search for recipes
-        const response = await fetch(`/recipes/search?q=${encodeURIComponent(searchQuery)}`);
+        const response = await fetch(`/recipes/search?query=${encodeURIComponent(searchQuery)}`);
         if (response.ok) {
             // Parse the JSON response
             const data = await response.json();
@@ -43,5 +45,6 @@ async function searchHandler(event) {
     }
 }
 
-// Event listener to handle search form submission
-document.getElementById('searchForm').addEventListener('submit', searchHandler);
+    // Attach the event listener to handle search form submission
+    document.getElementById('searchForm').addEventListener('submit', searchHandler);
+
