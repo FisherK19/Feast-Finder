@@ -49,9 +49,7 @@ app.post('/upload-image', authenticateUser, upload.single('image'), (req, res) =
 
 // Protected route for editing a post
 app.post('/edit-post/:postId', authenticateUser, (req, res) => {
-  // Check if the user is authorized to edit the post
-  // If authorized, proceed with editing
-  // Otherwise, send a 403 Forbidden response
+
 });
 
 // Start the server
