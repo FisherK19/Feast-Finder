@@ -104,44 +104,6 @@ app.post('/recipes', async (req, res) => {
     }
 });
 
-// Edit Recipe Route (GET)
-app.get('/recipes/:id/edit', async (req, res) => {
-    try {
-        const recipe = await Recipe.findByPk(req.params.id);
-        if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
-        }
-        // Render the edit form using the 'recipe.handlebars' template
-        res.render('recipe', { recipe, editing: true });
-    } catch (error) {
-        console.error('Error editing recipe:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Edit Recipe Route (POST)
-app.post('/recipes/:id/edit', async (req, res) => {
-    try {
-        const { recipeName, ingredients, directions } = req.body;
-        const recipeId = req.params.id;
-        // Find the recipe by ID
-        const recipe = await Recipe.findByPk(recipeId);
-        if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
-        }
-        // Update the recipe
-        await recipe.update({
-            recipe_name: recipeName,
-            ingredients: ingredients,
-            directions: directions
-        });
-        res.sendStatus(200); // Send a success status
-    } catch (error) {
-        console.error('Error updating recipe:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // Delete Recipe Route (POST)
 app.post('/recipes/:id/delete', async (req, res) => {
     try {
