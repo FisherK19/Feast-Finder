@@ -1,6 +1,8 @@
+const fetch = require('node-fetch');
+
 async function searchRecipes(query) {
     try {
-        const response = await fetch(`/recipes/search?query=${query}`);
+        const response = await fetch(`http://localhost:3001/recipes/search?query=${query}`);
         if (!response.ok) {
             throw new Error('Failed to fetch recipes');
         }
@@ -25,4 +27,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listener to the search form submit button
     document.querySelector('.search-form').addEventListener('submit', searchFormHandler);
 });
-

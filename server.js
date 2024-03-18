@@ -4,9 +4,10 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const Recipe = require('./models/recipe');
 const sequelize = require('./config/connection');
 const recipeRoutes = require('./controllers/api/recipeRoutes');
-
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,9 +24,6 @@ const hbs = exphbs.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-// Set the views directory path
-app.set('views', path.join(__dirname, 'views'));
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,38 +35,7 @@ app.use(session({
     saveUninitialized: false,
 }));
 
-// Server-side route to handle recipe editing
-app.post('/recipes/:id/edit', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { recipeName, ingredients, directions } = req.body;
-  
-      // Find the recipe by ID
-      const recipe = await Recipe.findByPk(id);
-  
-      if (!recipe) {
-        return res.status(404).json({ error: 'Recipe not found' });
-      }
-  
-      // Update the recipe with new data
-      recipe.recipeName = recipeName;
-      recipe.ingredients = ingredients;
-      recipe.directions = directions;
-  
-      // Save the updated recipe to the database
-      await recipe.save();
-  
-      // Respond with success message
-      res.status(200).json({ message: 'Recipe updated successfully' });
-    } catch (error) {
-      console.error('Error editing recipe:', error);
-      res.status(500).json({ error: 'Failed to edit recipe' });
-    }
-  });
-  
-
-// Mount the recipe routes
-app.use('/recipes', recipeRoutes);
+// Routes
 
 // Home route
 app.get('/', (req, res) => {
@@ -94,6 +61,98 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
     // Handle registration logic here
     res.redirect('/login');
+});
+
+// Recipes route
+app.get('/recipes', async (req, res) => {
+    try {
+        // Retrieve username from session
+        const username = req.session.username;
+        // Retrieve recipeName from session
+        const recipeName = req.session.recipeName;
+        // Fetch recipes from the database
+        const recipes = await Recipe.findAll();
+        // Render the recipes page with the username, recipeName, and recipes
+        res.render('recipe', { username, recipeName, recipes });
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/recipes', async (req, res) => {
+    try {
+        const { recipeName, ingredients, directions } = req.body;
+        if (!recipeName || !ingredients || !directions) {
+            return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
+        }
+        const newRecipe = await Recipe.create({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions
+        });
+        // Save recipeName in session
+        req.session.recipeName = recipeName;
+        res.redirect('/recipes'); // Redirect to refresh the page
+    } catch (error) {
+        console.error('Error creating recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Edit Recipe Route (GET)
+app.get('/recipes/:id/edit', async (req, res) => {
+    try {
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Render a form to edit the recipe
+        res.render('recipe', { recipe });
+    } catch (error) {
+        console.error('Error editing recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// Update Recipe Route (POST)
+app.post('/recipes/:id/edit', async (req, res) => {
+    try {
+        const { recipeName, ingredients, directions } = req.body;
+        const recipeId = req.params.id;
+        // Find the recipe by ID
+        const recipe = await Recipe.findByPk(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Update the recipe
+        await recipe.update({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions
+        });
+        res.redirect('/recipes'); // Redirect back to the recipe page
+    } catch (error) {
+        console.error('Error updating recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Delete Recipe Route (POST)
+app.post('/recipes/:id/delete', async (req, res) => {
+    try {
+        const recipe = await Recipe.findByPk(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Delete the recipe from the database
+        await recipe.destroy();
+        res.redirect('/recipes'); // Redirect back to the recipe page
+    } catch (error) {
+        console.error('Error deleting recipe:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Error handling middleware
