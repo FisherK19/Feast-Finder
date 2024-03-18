@@ -32,5 +32,3 @@ function addRecipeHandler(event) {
     }));
 }
 
-// Event listener to handle form submission for adding a recipe
-document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);

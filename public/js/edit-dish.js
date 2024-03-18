@@ -18,8 +18,29 @@ async function editRecipeHandler(event) {
     console.log('Directions:', directions); // Log directions
 
     try {
-        // Add fetch request here
+        // Send a fetch request to update the recipe
+        const response = await fetch(`/recipes/${recipeId}/edit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                recipeName: recipeName,
+                ingredients: ingredients,
+                directions: directions
+            })
+        });
 
+        if (response.ok) {
+            // Recipe updated successfully
+            console.log('Recipe updated successfully');
+            // Redirect to recipes page after editing a recipe
+            window.location.href = '/recipes';
+        } else {
+            // Handle form submission error
+            console.error('Failed to update recipe');
+            alert('Failed to update recipe. Please try again.');
+        }
     } catch (error) {
         console.error('Error editing recipe:', error);
         alert('An error occurred while editing the recipe');
@@ -28,7 +49,7 @@ async function editRecipeHandler(event) {
 
 // Event listener to handle form submission for editing
 document.addEventListener('submit', function(event) {
-    if (event.target.matches('.edit-form')) {
+    if (event.target.matches('.edit-recipe-form')) {
         editRecipeHandler(event);
     }
 });

@@ -32,7 +32,7 @@ async function uploadImageHandler(event) {
     event.preventDefault();
 
     // Get the form data
-    const formData = new FormData(document.getElementById('uploadImageForm'));
+    const formData = new FormData(document.getElementById('addRecipeForm'));
 
     try {
         // Send a fetch request to upload the image
@@ -54,4 +54,4 @@ async function uploadImageHandler(event) {
 }
 
 // Event listener to handle form submission for uploading an image
-document.getElementById('uploadImageForm').addEventListener('submit', uploadImageHandler);
+document.getElementById('addRecipeForm').addEventListener('submit', uploadImageHandler);
