@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -77,5 +77,64 @@
     <script src="/js/main.js"></script>
     <script src="/js/script.js"></script>
 </body>
-</html>
+</html> --}}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes</title>
+    <link rel="stylesheet" href="/css/recipe.css">
+</head>
+<body>
+    <!-- Search Form -->
+    <form id="searchForm" class="search-form">
+        <input type="text" id="searchQuery" name="searchQuery" placeholder="Search recipes...">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Search Results -->
+    <div id="searchResults" class="search-results"></div>
+
+    <h1>Recipes</h1>
+
+    <!-- Display Recipes -->
+    {{#each recipes}}
+    <div class="recipe-card">
+        <h2>{{this.recipeName}}</h2>
+        <img src="{{this.imageUrl}}" alt="Recipe Image"> 
+        <p><strong>Ingredients:</strong> {{this.ingredients}}</p>
+        <p><strong>Directions:</strong> {{this.directions}}</p>
+
+        <!-- Delete Button -->
+        <form action="/recipes/{{this.id}}/delete" method="POST">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    {{/each}}
+
+    <!-- HTML Form for Adding a Recipe -->
+    <form id="addRecipeForm" action="/recipes" method="POST" enctype="multipart/form-data">
+        <label for="recipeName">Recipe Name:</label><br>
+        <input type="text" id="recipeName" name="recipeName" required><br>
+
+        <label for="ingredients">Ingredients:</label><br>
+        <textarea id="ingredients" name="ingredients" rows="4" cols="50" required></textarea><br>
+
+        <label for="directions">Directions:</label><br>
+        <textarea id="directions" name="directions" rows="4" cols="50" required></textarea><br>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/*"><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- JavaScript -->
+    <script src="/js/add-dish.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
