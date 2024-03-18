@@ -11,6 +11,7 @@ header {
 /* Apply styles to nav */
 nav {
   display: flex;
+  justify-content: center; /* Align links horizontally */
 }
 
 .nav-link {
@@ -19,6 +20,13 @@ nav {
   margin: 0 10px;
   text-decoration: none;
   color: var(--secondary);
+  transition: all 0.3s ease; /* Add smooth transition effect */
+}
+
+.nav-link:hover {
+  color: #fff; /* Change text color on hover */
+  background-color: var(--accent); /* Change background color on hover */
+  border-radius: 5px; /* Add rounded corners on hover */
 }
 
 /* Apply styles to main */
@@ -44,6 +52,7 @@ main {
   height: auto;
   margin-top: 20px;
 }
+
 /* Apply styles to search form */
 .search-form {
   margin-bottom: 20px;
