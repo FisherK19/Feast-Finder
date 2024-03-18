@@ -1,10 +1,22 @@
 const express = require('express');
-const router = express.Router();
 const multer = require('multer');
 const Recipe = require('../../models/recipe');
 const { Op } = require('sequelize');
-// Recipes route
-router.get('/recipes', async (req, res) => {
+const router = express.Router();
+
+// Set up Multer for file upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Use Date.now() to get a unique filename
+  }
+});
+
+    const upload = multer({ storage: storage });
+    // Recipes route
+    router.get('/recipes', async (req, res) => {
     try {
         // Retrieve username from session
         const username = req.session.username;
@@ -20,8 +32,8 @@ router.get('/recipes', async (req, res) => {
     }
 });
 
-// Edit Recipe Route (GET)
-router.get('/recipes/:id/edit', async (req, res) => {
+    // Edit Recipe Route (GET)
+    router.get('/recipes/:id/edit', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id);
         if (!recipe) {
@@ -35,31 +47,37 @@ router.get('/recipes/:id/edit', async (req, res) => {
     }
 });
 
-// Update Recipe Route (POST)
-router.post('/recipes/:id/edit', async (req, res) => {
+    // Route for updating a specific recipe with the possibility of a new image
+    router.post('/recipes/:id/edit', upload.single('image'), async (req, res) => {
     try {
-        const { recipeName, ingredients, directions } = req.body;
-        const recipeId = req.params.id;
-        // Find the recipe by ID
-        const recipe = await Recipe.findByPk(recipeId);
-        if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
-        }
-        // Update the recipe
-        await recipe.update({
-            recipe_name: recipeName,
-            ingredients: ingredients,
-            directions: directions
-        });
-        res.redirect('/recipes'); // Redirect back to the recipe page
+      const { recipeName, ingredients, directions } = req.body;
+      const recipeId = req.params.id;
+      const updateData = {
+        recipe_name: recipeName,
+        ingredients: ingredients,
+        directions: directions
+      };
+
+      if (req.file) {
+        updateData.image_url = req.file.path; // Update image URL if a new image is uploaded
+      }
+
+      const recipe = await Recipe.findByPk(recipeId);
+      if (!recipe) {
+        return res.status(404).json({ error: 'Recipe not found' });
+      }
+
+      await recipe.update(updateData);
+      res.redirect('/recipes'); // Redirect back to the recipes page
     } catch (error) {
-        console.error('Error updating recipe:', error);
-        res.status(500).json({ error: 'Internal server error' });
+      console.error('Error updating recipe:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Delete Recipe Route (POST)
-router.post('/recipes/:id/delete', async (req, res) => {
+
+    // Delete Recipe Route (POST)
+    router.post('/recipes/:id/delete', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id);
         if (!recipe) {
@@ -74,8 +92,8 @@ router.post('/recipes/:id/delete', async (req, res) => {
     }
 });
 
-// Search Recipe Route (GET)
-router.get('/search', async (req, res) => {
+    // Search Recipe Route (GET)
+    router.get('/search', async (req, res) => {
     try {
         const { query } = req.query;
         if (!query) {
@@ -95,38 +113,31 @@ router.get('/search', async (req, res) => {
     }
 });
 
-// Set up multer for file upload
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Destination folder for uploaded files
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname); // Use unique filenames
-    }
-});
-
-const upload = multer({ storage: storage });
-
-// Route for uploading recipe image
-router.post('/upload-image', upload.single('image'), async (req, res) => {
+    router.post('/recipes', upload.single('image'), async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
+        // Extract the recipe data from the request body
+        const { recipeName, ingredients, directions } = req.body;
+        
+        // If an image was uploaded, set the image URL; otherwise, use null
+        const imageUrl = req.file ? req.file.path : null;
 
-        const imageUrl = req.file.path; // Path to the uploaded image file
-        // Save imageUrl in the database or associate it with the recipe
-        // Respond with the URL of the uploaded image
-        res.status(200).json({ imageUrl });
+        // Create the recipe object with image URL
+        const newRecipe = await Recipe.create({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions,
+            image_url: imageUrl // Save the image URL in the database
+        });
+
+        // Redirect to the recipes page
+        res.redirect('/recipes');
     } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-
 module.exports = router;
-
 
 
 

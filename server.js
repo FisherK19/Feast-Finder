@@ -1,12 +1,10 @@
-// Import necessary modules
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const Recipe = require('./models/recipe');
-const { Op } = require('sequelize');
-const sequelize = require('./config/connection');
+const sequelize = require('./config/connection'); // Import sequelize instance
+const recipeRoutes = require('./controllers/api/recipeRoutes');
 const multer = require('multer');
 
 // Create Express app
@@ -25,17 +23,21 @@ const hbs = exphbs.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
+
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static('uploads')); // Serve uploads folder as static
 app.use(cookieParser());
 app.use(session({
-    secret: 'your_secret_key',
+    secret: process.env.SESSION_SECRET || 'your_secret_key', // Use an environment variable
     resave: false,
     saveUninitialized: false,
 }));
 
+// Use recipe routes
+app.use(recipeRoutes);
 // Routes
 const upload = multer({ dest: 'uploads/' });
 
@@ -194,7 +196,6 @@ app.post('/recipes/upload-image', upload.single('image'), async (req, res) => {
     }
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
@@ -202,5 +203,5 @@ app.use((err, req, res, next) => {
 
 // Start the server
 sequelize.sync({ force: false }).then(() => {
-    app.listen(PORT, () => console.log('Now listening on port', PORT));
+    app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });
