@@ -42,7 +42,8 @@ To run Feast Finder locally, follow these steps:
 - Search for recipes based on keywords, ingredients, or categories.
 
 ## Screenshots 
-[Insert screenshots here]
+<img width="1440" alt="Screen Shot 2024-03-18 at 7 37 59 PM" src="https://github.com/FisherK19/Feast-Finder/assets/150309175/8070f358-f5f2-4e9c-b05b-e2f001c0084c">
+
 
 ## Feastfinder Link:
 (https://feast-finder-a0963eb36267.herokuapp.com/)
