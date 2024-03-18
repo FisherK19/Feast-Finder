@@ -41,8 +41,7 @@
     <img src="{{this.imageUrl}}" alt="Recipe Image"> 
     <p><strong>Ingredients:</strong> {{this.ingredients}}</p>
     <p><strong>Directions:</strong> {{this.directions}}</p>
-    <!-- Edit Button -->
-    <button class="edit-button" data-id="{{this.id}}">Edit</button>
+
     <!-- Delete Button -->
     <form action="/recipes/{{this.id}}/delete" method="POST">
         <button type="submit">Delete</button>
@@ -74,7 +73,6 @@
 
     <!-- JavaScript -->
     <script src="/js/add-dish.js"></script>
-    <script src="/js/edit-dish.js"></script>
     <script src="/js/search.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/script.js"></script>

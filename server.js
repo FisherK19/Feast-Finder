@@ -3,7 +3,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const sequelize = require('./config/connection'); // Import sequelize instance
+const sequelize = require('./config/connection'); 
 const recipeRoutes = require('./controllers/api/recipeRoutes');
 const multer = require('multer');
 
