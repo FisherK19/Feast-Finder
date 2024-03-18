@@ -1,37 +1,34 @@
+// Function to handle editing a recipe
 async function editRecipeHandler(event) {
-  event.preventDefault();
-  
-  const recipeName = document.querySelector('#recipeName').value;
-  const ingredients = document.querySelector('#ingredients').value;
-  const directions = document.querySelector('#directions').value;
+    event.preventDefault();
+    console.log('Edit form submitted'); // Check if event listener is triggered
 
-  const id = window.location.toString().split('/').pop();
+    const form = event.target;
+    console.log('Form:', form); // Log the form element
 
-  const response = await fetch(`/recipes/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      recipeName,
-      ingredients,
-      directions,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+    const recipeId = form.getAttribute('data-id');
+    console.log('Recipe ID:', recipeId); // Log the recipe ID
 
-  if (response.ok) {
-    document.location.replace(`/recipes/${id}`);
-  } else {
-    alert('Failed to edit recipe');
-  }
+    const recipeName = form.querySelector(`#recipeName_${recipeId}`).value;
+    const ingredients = form.querySelector(`#ingredients_${recipeId}`).value;
+    const directions = form.querySelector(`#directions_${recipeId}`).value;
+
+    console.log('Recipe Name:', recipeName); // Log recipeName
+    console.log('Ingredients:', ingredients); // Log ingredients
+    console.log('Directions:', directions); // Log directions
+
+    try {
+        // Add fetch request here
+
+    } catch (error) {
+        console.error('Error editing recipe:', error);
+        alert('An error occurred while editing the recipe');
+    }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Add event listener to the edit form submit button
-  document.querySelector('.edit-form .submit-button').addEventListener('click', editRecipeHandler);
+// Event listener to handle form submission for editing
+document.addEventListener('submit', function(event) {
+    if (event.target.matches('.edit-form')) {
+        editRecipeHandler(event);
+    }
 });
-
-
-
-
-  

@@ -1,49 +1,36 @@
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);
-});
+// Function to handle adding a new recipe
+function addRecipeHandler(event) {
+    event.preventDefault();
+    console.log('Form submitted');
 
-async function addRecipeHandler(event) {
-  event.preventDefault();
+    const form = event.target;
+    const recipeName = form.querySelector('#recipeName').value;
+    const ingredients = form.querySelector('#ingredients').value;
+    const directions = form.querySelector('#directions').value;
 
-  const recipeName = document.querySelector('#recipeName').value;
-  const ingredients = document.querySelector('#ingredients').value;
-  const directions = document.querySelector('#directions').value;
-
-  const response = await fetch('/recipes', { // Change the URL to match your server route
-      method: 'POST',
-      body: JSON.stringify({
-          recipeName,
-          ingredients,
-          directions,
-      }),
-      headers: {
-          'Content-Type': 'application/json',
-      },
-  });
-
-  if (response.ok) {
-      const newRecipe = await response.json(); // Parse the JSON response
-      renderRecipe(newRecipe); // Call a function to render the new recipe
-  } else {
-      alert('Failed to add recipe');
-  }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/recipes', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                // Request succeeded
+                console.log('Recipe added successfully');
+                // Redirect to recipes page after adding a recipe
+                window.location.href = '/recipes';
+            } else {
+                // Handle errors
+                console.error('Failed to add recipe');
+                alert('Failed to add recipe. Please try again.');
+            }
+        }
+    };
+    xhr.send(JSON.stringify({
+        recipeName: recipeName,
+        ingredients: ingredients,
+        directions: directions
+    }));
 }
 
-function renderRecipe(recipe) {
-  const recipeContainer = document.querySelector('.recipes-container');
-  const recipeCard = document.createElement('div');
-  recipeCard.classList.add('recipe-card');
-  recipeCard.innerHTML = `
-      <h2>${recipe.recipe_name}</h2>
-      <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
-      <p><strong>Directions:</strong> ${recipe.directions}</p>
-  `;
-  recipeContainer.appendChild(recipeCard);
-}
-
-
-
-
-
-
-  
+// Event listener to handle form submission for adding a recipe
+document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Recipe = require('../../models/recipe');
+const { Op } = require('sequelize');
+const multer = require('multer');
 
 // Recipes route
 router.get('/recipes', async (req, res) => {
@@ -15,26 +17,6 @@ router.get('/recipes', async (req, res) => {
         res.render('recipe', { username, recipeName, recipes });
     } catch (error) {
         console.error('Error fetching recipes:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-router.post('/recipes', async (req, res) => {
-    try {
-        const { recipeName, ingredients, directions } = req.body;
-        if (!recipeName || !ingredients || !directions) {
-            return res.status(400).json({ error: "Please provide values for recipeName, ingredients, and directions." });
-        }
-        const newRecipe = await Recipe.create({
-            recipe_name: recipeName,
-            ingredients: ingredients,
-            directions: directions
-        });
-        // Save recipeName in session
-        req.session.recipeName = recipeName;
-        res.redirect('/recipes'); // Redirect to refresh the page
-    } catch (error) {
-        console.error('Error creating recipe:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -54,15 +36,22 @@ router.get('/recipes/:id/edit', async (req, res) => {
     }
 });
 
-// Edit Recipe Route (POST)
+// Update Recipe Route (POST)
 router.post('/recipes/:id/edit', async (req, res) => {
     try {
         const { recipeName, ingredients, directions } = req.body;
         const recipeId = req.params.id;
-        await Recipe.update(
-            { recipe_name: recipeName, ingredients: ingredients, directions: directions },
-            { where: { id: recipeId } }
-        );
+        // Find the recipe by ID
+        const recipe = await Recipe.findByPk(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
+        }
+        // Update the recipe
+        await recipe.update({
+            recipe_name: recipeName,
+            ingredients: ingredients,
+            directions: directions
+        });
         res.redirect('/recipes'); // Redirect back to the recipe page
     } catch (error) {
         console.error('Error updating recipe:', error);
@@ -86,9 +75,53 @@ router.post('/recipes/:id/delete', async (req, res) => {
     }
 });
 
+// Search Recipe Route (GET)
+router.get('/search', async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+        const recipes = await Recipe.findAll({
+            where: {
+                recipe_name: {
+                    [Op.iLike]: `%${query}%`
+                }
+            }
+        });
+        res.render('recipe', { recipes });
+    } catch (error) {
+        console.error('Error searching recipes:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Set up multer for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Destination folder for uploaded files
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Use unique filenames
+    }
+});
+const upload = multer({ storage: storage });
+
+// Route for uploading recipe image
+router.post('/upload-image', upload.single('image'), async (req, res) => {
+    try {
+        const imageUrl = req.file.path; // Path to the uploaded image file
+        // Save imageUrl in the database or associate it with the recipe
+        // Respond with the URL of the uploaded image
+        res.status(200).json({ imageUrl });
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;
-
-
 
 
 

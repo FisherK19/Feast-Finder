@@ -44,3 +44,48 @@ main {
   height: auto;
   margin-top: 20px;
 }
+/* Apply styles to search form */
+.search-form {
+  margin-bottom: 20px;
+}
+
+.search-form input[type="text"],
+.search-form button {
+  padding: 10px;
+  font-size: 1em;
+}
+
+.search-form input[type="text"] {
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-form button {
+  background-color: var(--primary);
+  color: var(--secondary);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Apply styles to search results */
+.search-results {
+  margin-top: 20px;
+}
+
+.search-results .recipe-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.search-results .recipe-card h2 {
+  margin-bottom: 10px;
+}
+
+.search-results .recipe-card p {
+  margin-bottom: 5px;
+}
