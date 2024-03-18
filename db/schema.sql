@@ -1,3 +1,3 @@
-DROP DATABASE IF EXISTS feastfinder_db;
+DROP DATABASE IF EXISTS feastfinder;
 
-CREATE DATABASE feastfinder_db;
+CREATE DATABASE feastfinder;

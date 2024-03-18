@@ -19,6 +19,12 @@
     flex-direction: column;
 }
 
+.recipe-card img {
+    width: 100%; /* Ensure the image fills the container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 15px 15px 0 0; /* Apply rounded corners to the top */
+}
+
 /* Hover effect for recipe cards */
 .recipe-card:hover {
     transform: translateY(-10px);

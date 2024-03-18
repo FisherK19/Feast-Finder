@@ -1,28 +1,53 @@
-// Function to handle form submission for adding a recipe with image upload
-async function addRecipeHandler(event) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    const addRecipeForm = document.getElementById('addRecipeForm');
+    const editRecipeForms = document.querySelectorAll('.edit-recipe-form');
 
-    // Get the form data
-    const formData = new FormData(document.getElementById('addRecipeForm'));
+    addRecipeForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-    try {
-        // Send a fetch request to upload the image and submit the recipe
-        const response = await fetch('/recipes', {
-            method: 'POST',
-            body: formData
-        });
+        const formData = new FormData(addRecipeForm);
 
-        if (response.ok) {
-            // Recipe added successfully
-            window.location.href = '/recipes'; // Redirect to recipe list page
-        } else {
-            // Handle form submission error
-            console.error('Failed to add recipe');
+        try {
+            const response = await fetch('/recipes', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.href = '/recipes';
+            } else {
+                console.error('Failed to add recipe');
+                alert('Failed to add recipe. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error adding recipe:', error);
+            alert('An error occurred while adding the recipe');
         }
-    } catch (error) {
-        console.error('Error adding recipe:', error);
-    }
-}
+    });
 
-// Event listener to handle form submission for adding a recipe
-document.getElementById('addRecipeForm').addEventListener('submit', addRecipeHandler);
+    editRecipeForms.forEach(function(form) {
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const recipeId = form.getAttribute('data-id');
+
+            try {
+                const response = await fetch(`/recipes/${recipeId}/edit`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    window.location.href = '/recipes';
+                } else {
+                    console.error('Failed to edit recipe');
+                    alert('Failed to edit recipe. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error editing recipe:', error);
+                alert('An error occurred while editing the recipe');
+            }
+        });
+    });
+});

@@ -48,8 +48,6 @@ async function editRecipeHandler(event) {
 }
 
 // Event listener to handle form submission for editing
-document.addEventListener('submit', function(event) {
-    if (event.target.matches('.edit-recipe-form')) {
-        editRecipeHandler(event);
-    }
+document.querySelectorAll('.edit-recipe-form').forEach(form => {
+    form.addEventListener('submit', editRecipeHandler);
 });
