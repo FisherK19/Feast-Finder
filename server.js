@@ -1,20 +1,28 @@
-// Import necessary modules
 const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const sequelize = require('./config/connection');
-const recipeRoutes = require('./controllers/api/recipeRoutes'); 
+const sequelize = require('./config/connection'); // Import sequelize instance
+const recipeRoutes = require('./controllers/api/recipeRoutes');
+const multer = require('multer');
 
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Set up Handlebars view engine
-const hbs = exphbs.create({ /* ... your config ... */ });
+const hbs = exphbs.create({
+    allowProtoMethodsByDefault: true,
+    allowProtoPropertiesByDefault: true,
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+    }
+});
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+
 
 // Middleware
 app.use(express.json());
